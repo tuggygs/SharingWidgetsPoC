@@ -1,0 +1,12 @@
+<resources>
+
+    <string name="app_name">Sharing Widgets PoC</string>
+
+    <string name="audio_widget_text">Share Audio File</string>
+    <string name="camera_widget_text">Share Image</string>
+    <string name="location_widget_text">Share Location</string>
+    <string name="contact_widget_text">Share Contact</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+
+</resources>
