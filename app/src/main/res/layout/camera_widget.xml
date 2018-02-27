@@ -4,7 +4,7 @@
     android:background="#09C"
     android:padding="@dimen/widget_margin">
 
-    <TextView
+   <!-- <TextView
         android:id="@+id/camera_widget_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -16,6 +16,16 @@
         android:text="@string/camera_widget_text"
         android:textColor="#ffffff"
         android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic" />-->
+
+    <Button android:id="@+id/button_start_widget"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="Share Image"
+        android:background="#09C"
+        android:textColor="#ffffff"
+        android:textSize="24sp"
+        android:textStyle="bold|italic"
+        android:textAllCaps="false"/>
 
 </RelativeLayout>

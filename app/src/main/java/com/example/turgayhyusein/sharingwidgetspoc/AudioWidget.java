@@ -27,7 +27,7 @@ public class AudioWidget extends AppWidgetProvider {
         CharSequence widgetText = context.getString(R.string.audio_widget_text);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.audio_widget);
-        views.setTextViewText(R.id.audio_widget_text, widgetText);
+        //views.setTextViewText(R.id.audio_widget_text, widgetText);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -56,16 +56,15 @@ public class AudioWidget extends AppWidgetProvider {
             // Get the layout for the App Widget and attach an on-click listener
             // to the button
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.audio_widget);
-            views.setOnClickPendingIntent(R.id.button, pendingIntent);
+            views.setOnClickPendingIntent(R.id.button_start_widget, pendingIntent);
 
             // To update a label
-            views.setTextViewText(R.id.widget1label, df.format(new Date()));
+            // views.setTextViewText(R.id.widget1label, df.format(new Date()));
 
             // Tell the AppWidgetManager to perform an update on the current app
             // widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-
     }
 
     @Override
