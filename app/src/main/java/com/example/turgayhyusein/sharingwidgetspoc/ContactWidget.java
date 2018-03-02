@@ -1,8 +1,10 @@
 package com.example.turgayhyusein.sharingwidgetspoc;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 /**
@@ -10,13 +12,15 @@ import android.widget.RemoteViews;
  */
 public class ContactWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.contact_widget_text);
-        // Construct the RemoteViews object
+        Intent intent = new Intent(context, ContactVCFChooserActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,	intent, 0);
+        //PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.contact_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setOnClickPendingIntent(R.id.button_choose_contact, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
@@ -40,4 +44,3 @@ public class ContactWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-
