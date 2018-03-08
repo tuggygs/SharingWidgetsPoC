@@ -27,8 +27,8 @@ public class AudioWidget extends AppWidgetProvider {
         Intent stopIntent = new Intent(context, RecordingAudioService.class);
         stopIntent.setAction("STOP");
 
-        PendingIntent startPendingIntent = PendingIntent.getService(context, REQUEST_CODE, startIntent, INTENT_FLAGS);
-        PendingIntent stopPendingIntent = PendingIntent.getService(context, REQUEST_CODE, stopIntent, INTENT_FLAGS);
+        PendingIntent startPendingIntent = PendingIntent.getService(context, REQUEST_CODE, startIntent, 0);
+        PendingIntent stopPendingIntent = PendingIntent.getService(context, REQUEST_CODE, stopIntent, 0);
 
         // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.audio_widget);

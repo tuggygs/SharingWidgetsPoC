@@ -1,8 +1,10 @@
 package com.example.turgayhyusein.sharingwidgetspoc;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 /**
@@ -10,13 +12,16 @@ import android.widget.RemoteViews;
  */
 public class LocationWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        CharSequence widgetText = context.getString(R.string.location_widget_text);
+        Intent intent = new Intent(context, GetLocationActivity.class);
+
+        //PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,	intent, 0);
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.location_widget);
-        views.setTextViewText(R.id.appwidget_text, widgetText);
+        views.setOnClickPendingIntent(R.id.button_get_location, pendingIntent);
 
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);

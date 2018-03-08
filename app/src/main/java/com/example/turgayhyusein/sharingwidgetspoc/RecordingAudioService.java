@@ -4,10 +4,14 @@ import android.Manifest;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.IBinder;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.util.Log;
 
@@ -39,6 +43,8 @@ public class RecordingAudioService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        Log.e("--SERVICE----- ", "--ON CREATE--" );
+
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordsharing.3gpp";
 
@@ -63,6 +69,7 @@ public class RecordingAudioService extends Service {
         //start sticky means service will be explicity started and stopped
         return START_STICKY;
     }
+
 
     /*private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
@@ -115,7 +122,19 @@ public class RecordingAudioService extends Service {
         share.putExtra(Intent.EXTRA_STREAM, uri);
         share.setType("audio/*");
         share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+       // share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(Intent.createChooser(share, "Share audio File"));
+
+
+
+        /*Uri uri = Uri.parse(mFileName);
+        Intent share = new Intent(Intent.ACTION_SEND);
+        share.setType("audio*//*");
+        share.putExtra(Intent.EXTRA_STREAM, uri);
+        //share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        startActivity(Intent.createChooser(share, "Share Sound File"));*/
     }
 
     @Override

@@ -8,10 +8,14 @@
     <uses-permission android:name="android.permission.STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_1024px"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -70,6 +74,10 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/contact_widget_info" />
         </receiver>
+
+        <activity
+            android:name="com.example.turgayhyusein.sharingwidgetspoc.GetLocationActivity"
+            android:label="@string/app_name" />
 
         <activity
             android:name="com.example.turgayhyusein.sharingwidgetspoc.RecordingAudioActivity"

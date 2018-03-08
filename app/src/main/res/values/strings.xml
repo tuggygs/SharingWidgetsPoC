@@ -8,5 +8,9 @@
     <string name="contact_widget_text">Share Contact</string>
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="ok">ОК</string>
 
+    <string name="camera_unavailable"><b>Camera could not be opened.</b>\nThis occurs when the camera is not available (for example it is already in use) or if the system has denied access (for example when camera access has been disabled).</string>
+    <string name="camera_permission_available">Camera permission is available. Starting preview.</string>
+    <string name="camera_access_required">Camera access is required to display the camera preview.</string>
 </resources>

@@ -26,36 +26,33 @@ import java.io.FileOutputStream;
 
 public class ContactVCFChooserActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = ContactVCFChooserActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final int PERMISSIONS_REQUEST_READ_CONTACTS = 100;
     private Uri uriContact;
-    private String contactID;     // contacts unique ID
-
-    private static final String VCF_DIRECTORY = "/vcf_demonuts";
-    private File vcfFile;
     private static String mFileName = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        //setContentView(R.layout.activity_main);
 
-       /* // File vcfFile = new File(this.getExternalFilesDir(null), "generated.vcf");
-        File vdfdirectory = new File(
-                Environment.getExternalStorageDirectory() + VCF_DIRECTORY);
-// have the object build the directory structure, if needed.
+        /* // File vcfFile = new File(this.getExternalFilesDir(null), "generated.vcf");
+        File vdfdirectory = new File(Environment.getExternalStorageDirectory() + VCF_DIRECTORY);
+        // have the object build the directory structure, if needed.
         if (!vdfdirectory.exists()) {
             vdfdirectory.mkdirs();
-        }
-*/
+        }*/
+
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/contactsharing.vcf";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //Toast.makeText(this, "CONTACT-----", Toast.LENGTH_SHORT).show();
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
+        }else {
+            Log.e(TAG,"BUILS VERSION SMALLER THEN 23");
+            startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), REQUEST_CODE_PICK_CONTACTS);
         }
     }
 
@@ -74,21 +71,18 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
             retrieveContactPhoto();*/
 
             getContactVCF(uriContact);
-
             shareContact(mFileName);
         }
     }
 
     public void getContactVCF(Uri urii) {
-        final String vfile = "Contacts.vcf";
 
       /*  Cursor phones = getBaseContext().getContentResolver().query(
                 ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
                 null, null, null);*/
 
         Cursor phones = getBaseContext().getContentResolver().query(
-                urii, null,
-                null, null, null);
+                urii, null, null, null, null);
 
         phones.moveToFirst();
         for (int i = 0; i < 1; i++) { // phones.getCount()
@@ -115,12 +109,10 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
                 e1.printStackTrace();
             }
         }
-
-        //return uri;
     }
 
     private void shareContact(String contactUri) {
-        Log.e(TAG,"CONTACT = " + contactUri + " / " + vcfFile);
+
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_SEND);
         intent.setType("text/x-vcard");
@@ -133,15 +125,6 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
         }
         //intent.putExtra(Intent.EXTRA_STREAM, contactUri); //Uri.parse("storage_path")
         startActivity(Intent.createChooser(intent, "Share Contact"));
-
-      /*  //String sharePath = Environment.getExternalStorageDirectory().getPath() + "/Soundboard/Ringtones/sample.m4a";
-        //Log.e(TAG,"AUDIO PATH = " + sharePath);
-        //Uri uri = Uri.parse(sharePath);
-        Intent share = new Intent(Intent.ACTION_SEND);
-        //share.setType("text/x-vcard");
-        //share.putExtra(Intent.EXTRA_STREAM, contactUri);
-        share.setDataAndType(contactUri, "text/x-vcard");
-        startActivity(Intent.createChooser(share, "Share Contact"));*/
     }
 
     @Override
@@ -149,7 +132,6 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
         if (requestCode == PERMISSIONS_REQUEST_READ_CONTACTS) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // Permission is granted
-                //Toast.makeText(this, "Permission is granted", Toast.LENGTH_SHORT).show();
                 startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), REQUEST_CODE_PICK_CONTACTS);
             } else {
                 Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();

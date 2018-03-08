@@ -1,14 +1,12 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#09C"
     android:padding="@dimen/widget_margin">
 
     <Button android:id="@+id/button_choose_contact"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="Share Contact"
-        android:background="#09C"
+        android:background="@drawable/share_contact"
         android:textColor="#ffffff"
         android:textSize="24sp"
         android:textStyle="bold|italic"
