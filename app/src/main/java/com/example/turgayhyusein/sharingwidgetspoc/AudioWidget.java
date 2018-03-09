@@ -12,23 +12,20 @@ import android.widget.RemoteViews;
  */
 public class AudioWidget extends AppWidgetProvider {
 
-    public static final String TAG = AudioWidget.class.getSimpleName();
-
     private static final int INTENT_FLAGS = PendingIntent.FLAG_UPDATE_CURRENT;
     private static final int REQUEST_CODE = 0;
 
     static void updateAppWidget(final Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
-        // Create an Intent to launch ExampleActivity
-        //Intent intent = new Intent(context, RecordingAudioActivity.class);
-        //PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,	intent, 0);
+
+        //Typeface font = Typeface.createFromAsset(context.getAssets(), "fonts/MyriadProRegular.ttf");
 
         Intent startIntent = new Intent(context, RecordingAudioService.class);
         startIntent.setAction("START");
         Intent stopIntent = new Intent(context, RecordingAudioService.class);
         stopIntent.setAction("STOP");
 
-        PendingIntent startPendingIntent = PendingIntent.getService(context, REQUEST_CODE, startIntent, 0);
-        PendingIntent stopPendingIntent = PendingIntent.getService(context, REQUEST_CODE, stopIntent, 0);
+        PendingIntent startPendingIntent = PendingIntent.getService(context, REQUEST_CODE, startIntent, INTENT_FLAGS);
+        PendingIntent stopPendingIntent = PendingIntent.getService(context, REQUEST_CODE, stopIntent, INTENT_FLAGS);
 
         // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.audio_widget);

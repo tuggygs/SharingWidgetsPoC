@@ -10,12 +10,12 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
  * Created by turgay.hyusein on 3/6/2018.
@@ -36,31 +36,42 @@ public class GetLocationActivity extends AppCompatActivity {
      * Represents a geographical location.
      */
     protected Location mLastLocation;
+    private LocationCallback mLocationCallback;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+    }
 
-        /*if (Build.VERSION.SDK_INT >= 23) {
-            if (!checkPermissions()) {
-                requestPermissions();
-            } else {
-                getLastLocation();
-            }
-        } else {
-            Log.e(TAG, "BUILS VERSION SMALLER THEN 23");
-            getLastLocation();
-        }*/
-
-        //Toast.makeText(getApplicationContext(),"Not finished yet.",Toast.LENGTH_SHORT).show();
-        Log.e(TAG, "ON CREATE");
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+       // mFusedLocationClient.requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                for (Location location : locationResult.getLocations()) {
+                    // Update UI with location data
+                    // ...
+                }
+            };
+        };
     }
 
     @Override
     public void onStart() {
         super.onStart();
+
+        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (Build.VERSION.SDK_INT >= 23) {
             if (!checkPermissions()) {
@@ -69,16 +80,13 @@ public class GetLocationActivity extends AppCompatActivity {
                 getLastLocation();
             }
         } else {
-            Log.e(TAG, "BUILS VERSION SMALLER THEN 23");
             getLastLocation();
         }
     }
 
     private void shareYourLocation(Location userLoc) {
-
         Double latitude = userLoc.getLatitude();
         Double longitude = userLoc.getLongitude();
-        Log.e("LOCA", " LAT = " + latitude + " / LON = " + longitude);
         String uri = "http://maps.google.com/maps?saddr=" + latitude + "," + longitude;
 
         Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
@@ -98,29 +106,35 @@ public class GetLocationActivity extends AppCompatActivity {
 
     @SuppressWarnings("MissingPermission")
     private void getLastLocation() {
-        /*if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-        }else{
-            //startLocationPermissionRequest();
-            Log.e(TAG, "NOT GRANTED == " + mFusedLocationClient);
-        }*/
-        Log.e(TAG, "NOT GRANTED == " + mFusedLocationClient);
-            mFusedLocationClient.getLastLocation()
+           /* mFusedLocationClient.getLastLocation()
                     .addOnCompleteListener(this, new OnCompleteListener<Location>() {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
+                            Log.e(TAG, "LOC TASK = " + task.getResult());
                             if (task.isSuccessful() && task.getResult() != null) {
                                 mLastLocation = task.getResult();
-                                Log.e(TAG, "LAST LOC == ");
+                                Log.e(TAG, "LAST LOC == " + mLastLocation);
                                 shareYourLocation(mLastLocation);
                             } else {
                                 Log.e(TAG, "getLastLocation:exception", task.getException());
                             }
                         }
-                    });
+                    });*/
 
 
-
-
+        mFusedLocationClient.getLastLocation()
+                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
+                    @Override
+                    public void onSuccess(Location location) {
+                        // Got last known location. In some rare situations this can be null.
+                        if (location != null) {
+                            // Logic to handle location object
+                            mLastLocation = location;
+                            Log.e(TAG, "LAST LOC == " + mLastLocation);
+                            shareYourLocation(mLastLocation);
+                        }
+                    }
+                });
     }
 
     //Return the current state of the permissions needed.
@@ -154,10 +168,8 @@ public class GetLocationActivity extends AppCompatActivity {
     }
 
     // Callback received when a permissions request has been completed.
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.i(TAG, "onRequestPermissionResult");
         if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
             if (grantResults.length <= 0) {
                 // If user interaction was interrupted, the permission request is cancelled and you

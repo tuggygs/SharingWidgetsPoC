@@ -9,11 +9,9 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.widget.Toast;
 
 import java.io.File;
@@ -38,20 +36,12 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
 
-        /* // File vcfFile = new File(this.getExternalFilesDir(null), "generated.vcf");
-        File vdfdirectory = new File(Environment.getExternalStorageDirectory() + VCF_DIRECTORY);
-        // have the object build the directory structure, if needed.
-        if (!vdfdirectory.exists()) {
-            vdfdirectory.mkdirs();
-        }*/
-
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/contactsharing.vcf";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(new String[]{Manifest.permission.READ_CONTACTS}, PERMISSIONS_REQUEST_READ_CONTACTS);
         }else {
-            Log.e(TAG,"BUILS VERSION SMALLER THEN 23");
             startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), REQUEST_CODE_PICK_CONTACTS);
         }
     }
@@ -64,22 +54,12 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
 
             uriContact = data.getData();
 
-            Log.e(TAG, "Response: " + data.toString() + "URI --> " +uriContact);
-
-           /* retrieveContactName();
-            retrieveContactNumber();
-            retrieveContactPhoto();*/
-
             getContactVCF(uriContact);
             shareContact(mFileName);
         }
     }
 
     public void getContactVCF(Uri urii) {
-
-      /*  Cursor phones = getBaseContext().getContentResolver().query(
-                ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null,
-                null, null, null);*/
 
         Cursor phones = getBaseContext().getContentResolver().query(
                 urii, null, null, null, null);
@@ -88,8 +68,7 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
         for (int i = 0; i < 1; i++) { // phones.getCount()
 
             String lookupKey = phones.getString(phones.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
-            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_VCARD_URI, lookupKey); //"1486i31040964042965120.2578i101"
-            Log.e(TAG,"getVCF = " + uri + " /// Look up key = " + lookupKey);
+            Uri uri = Uri.withAppendedPath(ContactsContract.Contacts.CONTENT_VCARD_URI, lookupKey);
 
             AssetFileDescriptor fd;
             try {
@@ -98,13 +77,9 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
                 byte[] buf = new byte[(int) fd.getDeclaredLength()];
                 fis.read(buf);
                 String VCard = new String(buf);
-                //String path = Environment.getExternalStorageDirectory().toString() + File.separator + vfile;
                 FileOutputStream mFileOutputStream = new FileOutputStream(mFileName,true);
                 mFileOutputStream.write(VCard.toString().getBytes());
                 phones.moveToNext();
-
-                Log.e("Vcard", VCard);
-
             } catch (Exception e1) {
                 e1.printStackTrace();
             }
@@ -123,7 +98,6 @@ public class ContactVCFChooserActivity extends AppCompatActivity {
         } finally {
             Binder.restoreCallingIdentity(token);
         }
-        //intent.putExtra(Intent.EXTRA_STREAM, contactUri); //Uri.parse("storage_path")
         startActivity(Intent.createChooser(intent, "Share Contact"));
     }
 

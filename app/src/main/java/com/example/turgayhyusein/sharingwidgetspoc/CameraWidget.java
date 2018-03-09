@@ -21,9 +21,6 @@ public class CameraWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.camera_widget);
         views.setOnClickPendingIntent(R.id.button_start_widget, pendingIntent);
 
-        // To update a label
-        // views.setTextViewText(R.id.widget1label, df.format(new Date()));
-
         // Tell the AppWidgetManager to perform an update on the current app widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

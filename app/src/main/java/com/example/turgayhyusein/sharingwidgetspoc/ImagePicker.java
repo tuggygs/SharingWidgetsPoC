@@ -33,12 +33,6 @@ public class ImagePicker {
         mContext = context;
     }
 
-    /*public ImagePicker(Context context, int imageSize)
-    {
-        mContext = context;
-        mImageSize = imageSize;
-    }*/
-
     public File pickImageFromCamera(Activity fragment) {
 
         File file = null;

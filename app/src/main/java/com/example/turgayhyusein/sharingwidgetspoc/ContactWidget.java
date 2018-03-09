@@ -16,7 +16,6 @@ public class ContactWidget extends AppWidgetProvider {
 
         Intent intent = new Intent(context, ContactVCFChooserActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,	intent, 0);
-        //PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
         // Get the layout for the App Widget and attach an on-click listener to the button
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.contact_widget);

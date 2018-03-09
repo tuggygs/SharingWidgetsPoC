@@ -14,9 +14,7 @@ public class LocationWidget extends AppWidgetProvider {
 
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
 
-        Intent intent = new Intent(context, GetLocationActivity.class);
-
-        //PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
+        Intent intent = new Intent(context, GetUserLocationActivity.class);
 
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,	intent, 0);
         // Construct the RemoteViews object
@@ -45,4 +43,3 @@ public class LocationWidget extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 }
-

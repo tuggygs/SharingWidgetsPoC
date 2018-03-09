@@ -35,7 +35,6 @@ public class CameraIntentActivity extends AppCompatActivity {
         //setContentView(R.layout.activity_main);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            //ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, PERMISSION_REQUEST_CAMERA); //requestCode
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
         }else {
             ImagePicker imagePicker = new ImagePicker(CameraIntentActivity.this);
@@ -45,13 +44,10 @@ public class CameraIntentActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.e(TAG,"REQ CODE = " + requestCode + " / " + grantResults[0]);
-
         // If request is cancelled, the result arrays are empty.
         if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             // permission was granted, yay! Do the
             // contacts-related task you need to do.
-            Log.e(TAG,"BUILS VERSION GREATER THEN 23");
             ImagePicker imagePicker = new ImagePicker(CameraIntentActivity.this);
             captureFile = imagePicker.pickImageFromCamera(CameraIntentActivity.this);
         } else {
@@ -59,17 +55,6 @@ public class CameraIntentActivity extends AppCompatActivity {
             // functionality that depends on this permission.
             Toast.makeText(this, "Permission denied to read your External storage", Toast.LENGTH_SHORT).show();
         }
-
-        /*   if (requestCode == PERMISSION_REQUEST_CAMERA) {
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                // Permission is granted
-                Log.e(TAG,"BUILS VERSION GREATER THEN 23");
-                ImagePicker imagePicker = new ImagePicker(CameraIntentActivity.this);
-                captureFile = imagePicker.pickImageFromCamera(CameraIntentActivity.this);
-            } else {
-                Toast.makeText(this, "Until you grant the permission, we canot display the names", Toast.LENGTH_SHORT).show();
-            }
-        }*/
     }
 
     @Override
@@ -78,7 +63,6 @@ public class CameraIntentActivity extends AppCompatActivity {
 
         if (requestCode == ImagePicker.ACTION_PICK_IMAGE_FROM_CAMERA && resultCode == Activity.RESULT_OK) {
             if (captureFile != null) {
-                Log.e(TAG, "CAPTURED FILE = " + captureFile);
                 shareCapturedImage(captureFile);
             }
         } else if (requestCode == ImagePicker.ACTION_PICK_IMAGE_FROM_GALLERY) {
@@ -93,7 +77,6 @@ public class CameraIntentActivity extends AppCompatActivity {
         share.setType("image/*");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            Log.e(TAG, "CAPTURED FILE 4 " + file);
             final long token = Binder.clearCallingIdentity();
             try {
                 Uri photoURI = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", file);
@@ -102,7 +85,6 @@ public class CameraIntentActivity extends AppCompatActivity {
                 Binder.restoreCallingIdentity(token);
             }
         }else {
-            Log.e(TAG, "CAPTURED FILE 3 " + file);
             share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));
         }
 

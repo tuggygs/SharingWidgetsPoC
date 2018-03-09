@@ -3,23 +3,6 @@
     android:layout_height="match_parent"
     android:padding="@dimen/widget_margin">
 
-   <!--
-   android:background="#09C"
-
-   <TextView
-        android:id="@+id/camera_widget_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/camera_widget_text"
-        android:text="@string/camera_widget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />-->
-
     <Button android:id="@+id/button_start_widget"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

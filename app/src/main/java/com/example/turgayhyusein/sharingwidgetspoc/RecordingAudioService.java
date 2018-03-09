@@ -29,8 +29,6 @@ public class RecordingAudioService extends Service {
     private MediaRecorder mRecorder = null;
     private static String mFileName = null;
     boolean mStartRecording = true;
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    private String [] permissions = {Manifest.permission.RECORD_AUDIO};
 
     public RecordingAudioService() {
     }
@@ -43,45 +41,31 @@ public class RecordingAudioService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Log.e("--SERVICE----- ", "--ON CREATE--" );
-
         mFileName = getExternalCacheDir().getAbsolutePath();
         mFileName += "/audiorecordsharing.3gpp";
-
-        //ActivityCompat.requestPermissions(this, permissions, REQUEST_RECORD_AUDIO_PERMISSION);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        if(intent.getAction().equals("START")) {
-            Log.e("--SERVICE----- ", "--STARTED--" + intent.getAction());
-            mStartRecording = true;
 
-        } else if(intent.getAction().equals("STOP")) {
-            Log.e("--SERVICE----- ", "--STARTED--" + intent.getAction());
-            mStartRecording = false;
-        }
+            if (intent.getAction().equals("START")) {
+                Log.e(TAG, "START SERVICE ACTION = " + intent.getAction());
+                mStartRecording = true;
+            } else if (intent.getAction().equals("STOP")) {
+                Log.e(TAG, "STOP SERVICE ACTION = " + intent.getAction());
+                mStartRecording = false;
+            }
+
+
+
 
         onRecord(mStartRecording);
 
         //start sticky means service will be explicity started and stopped
         return START_STICKY;
     }
-
-
-    /*private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for(ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if(serviceClass.getName().equals(service.service.getClassName())) {
-                Log.e("isMyServiceRunning?", true + "");
-                return true;
-            }
-        }
-        Log.e ("isMyServiceRunning?", false + "");
-        return false;
-    }*/
 
     private void onRecord(boolean start) {
         if (start) {
@@ -112,36 +96,32 @@ public class RecordingAudioService extends Service {
         mRecorder.release();
         mRecorder = null;
 
-        shareAudioFile();
+        Intent tempIntent = new Intent(RecordingAudioService.this, TempClass.class);
+        tempIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        tempIntent.putExtra("audiofile", mFileName);
+        startActivity(tempIntent);
+        Log.e(TAG,"STOP RECORDING");
+        onDestroy();
+        //shareAudioFile();
     }
 
     private void shareAudioFile() {
-        File f =new File(mFileName);
+
+        File f = new File(mFileName);
         Uri uri = FileProvider.getUriForFile(this, BuildConfig.APPLICATION_ID + ".provider", f);
         Intent share = new Intent(Intent.ACTION_SEND);
         share.putExtra(Intent.EXTRA_STREAM, uri);
         share.setType("audio/*");
-        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-       // share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(Intent.createChooser(share, "Share audio File"));
-
-
-
-        /*Uri uri = Uri.parse(mFileName);
-        Intent share = new Intent(Intent.ACTION_SEND);
-        share.setType("audio*//*");
-        share.putExtra(Intent.EXTRA_STREAM, uri);
-        //share.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        startActivity(Intent.createChooser(share, "Share Sound File"));*/
+        //share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        share.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        getApplicationContext().startActivity(Intent.createChooser(share, "Share audio File"));
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-
-        Log.e("EXIT", "onDestroy!!!!!");
+        Log.e(TAG, "ON DESTROY");
+        stopSelf();
     }
 
     @Nullable
